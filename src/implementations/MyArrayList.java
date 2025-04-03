@@ -1,50 +1,99 @@
-/**
- * 
- */
 package implementations;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 
-public class MyArrayList<E> {
-    private E[] elements;
-    private int size;
-    
+import utilities.Iterator;
+import utilities.ListADT;
+
+@SuppressWarnings("serial")
+public class MyArrayList<E> implements ListADT<E> {
+
+	private ArrayList<E> list;
+	
     public MyArrayList() {
-        // Initialize with a default size
-        elements = (E[]) new Object[10];  // Casting to E[]
-        size = 0;
+        list = new ArrayList<>();
     }
+	
+	@Override
+	public int size() {
+		return list.size();
+	}
 
-    public void add(E element) {
-        // Add element to the list
-    }
+	@Override
+	public void clear() {
+		list.clear();
+	}
 
-    public void add(int index, E element) throws IndexOutOfBoundsException {
-        // Add element at specified index
-    }
+	@Override
+	public boolean add(int index, E toAdd) throws NullPointerException, IndexOutOfBoundsException {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
-    public E remove(int index) throws IndexOutOfBoundsException {
+	@Override
+	public boolean add(E toAdd) throws NullPointerException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean addAll(ListADT<? extends E> toAdd) throws NullPointerException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public E get(int index) throws IndexOutOfBoundsException {
+		// TODO Auto-generated method stub
 		return null;
-        // Remove element at specified index
-    }
+	}
 
-    public E get(int index) throws IndexOutOfBoundsException {
-        // Get element at specified index
-        return null;
-    }
+	@Override
+	public E remove(int index) throws IndexOutOfBoundsException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    public int size() {
-        // Return the size of the list
-        return size;
-    }
+	@Override
+	public E remove(E toRemove) throws NullPointerException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    public Iterator<E> iterator() {
-        // Return an iterator
-        return null;
-    }
+	@Override
+	public E set(int index, E toChange) throws NullPointerException, IndexOutOfBoundsException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    // Utility method for resizing the array
-    private void resize() {
-        // Resize logic
-    }
+	@Override
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean contains(E toFind) throws NullPointerException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public E[] toArray(E[] toHold) throws NullPointerException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object[] toArray() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterator<E> iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 }
