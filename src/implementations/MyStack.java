@@ -3,7 +3,9 @@ package implementations;
 import utilities.StackADT;
 
 public class MyStack<E> implements StackADT<E> {
-    private MyArrayList<E> list;
+
+	private static final long serialVersionUID = 7046702979773370239L;
+	private MyArrayList<E> list;
 
     public MyStack() {
         list = new MyArrayList<>();

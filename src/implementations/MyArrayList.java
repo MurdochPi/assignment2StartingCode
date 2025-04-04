@@ -5,9 +5,10 @@ import java.util.NoSuchElementException;
 import utilities.Iterator;
 import utilities.ListADT;
 
-@SuppressWarnings("serial")
 public class MyArrayList<E> implements ListADT<E> {
     
+	private static final long serialVersionUID = 982267963980463371L;
+
     private static final int INITIAL_CAPACITY = 10;
     private Object[] data;
     private int size;
