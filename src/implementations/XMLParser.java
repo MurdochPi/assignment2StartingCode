@@ -4,7 +4,36 @@ import java.io.*;
 import java.util.*;
 import java.util.regex.*;
 
+/**
+ * A basic XML parser that validates XML tag matching and detects malformed or mismatched tags.
+ * 
+ * <p>This parser performs a two-pass scan:
+ * <ul>
+ *   <li>Pass 1: Extracts and classifies tags from each line of input.</li>
+ *   <li>Pass 2: Matches opening and closing tags, identifies unclosed or mismatched elements.</li>
+ * </ul>
+ * 
+ * <p>It does not perform schema or DTD validation, but catches:
+ * <ul>
+ *   <li>Unclosed tags</li>
+ *   <li>Unmatched closing tags</li>
+ *   <li>Malformed syntax (e.g., extra characters, case mismatches)</li>
+ *   <li>Self-closing tags</li>
+ * </ul>
+ * 
+ * Errors are stored and can be printed using {@link #printErrors()}.
+ * 
+ * @author Lochlan Piercey
+ * @author Murdoch Piercey
+ * @author Terril Moyo
+ * @version 1.0
+ * @since 2025
+ */
 public class XMLParser {
+
+    /**
+     * Stores information about a parsed tag.
+     */
     private static class TagInfo {
         String name;
         int line;
@@ -13,6 +42,15 @@ public class XMLParser {
         boolean matched = false;
         String fullText;
 
+        /**
+         * Constructs metadata for a tag.
+         *
+         * @param name the tag name
+         * @param line the line number it appears on
+         * @param isStart true if it is a start tag
+         * @param isSelfClosing true if it is a self-closing tag
+         * @param fullText the full text of the tag, including angle brackets
+         */
         TagInfo(String name, int line, boolean isStart, boolean isSelfClosing, String fullText) {
             this.name = name;
             this.line = line;
@@ -22,10 +60,19 @@ public class XMLParser {
         }
     }
 
+    /**
+     * Represents a validation error message associated with a specific line.
+     */
     private static class ErrorMessage {
         int line;
         String message;
 
+        /**
+         * Constructs an error message.
+         *
+         * @param line the line number where the error occurred
+         * @param message the error description
+         */
         ErrorMessage(int line, String message) {
             this.line = line;
             this.message = message;
@@ -35,11 +82,20 @@ public class XMLParser {
     private List<TagInfo> allTags;
     private List<ErrorMessage> errors;
 
+    /**
+     * Constructs an empty XML parser.
+     */
     public XMLParser() {
         allTags = new ArrayList<>();
         errors = new ArrayList<>();
     }
 
+    /**
+     * Parses the provided XML file and extracts tag information,
+     * performing structural validation.
+     *
+     * @param filename the name or path of the XML file to parse
+     */
     public void parseFile(String filename) {
         File file = new File(filename);
         if (!file.isAbsolute()) {
@@ -67,6 +123,12 @@ public class XMLParser {
         }
     }
 
+    /**
+     * Extracts tags from a line of XML text and identifies basic malformations.
+     *
+     * @param line the line content
+     * @param lineNumber the line number in the source file
+     */
     private void extractTags(String line, int lineNumber) {
         Pattern tagPattern = Pattern.compile("<[^<>]+>");
         Matcher matcher = tagPattern.matcher(line);
@@ -96,12 +158,15 @@ public class XMLParser {
             }
         }
 
-        // Detect multiple >> or trailing garbage after tags
         if (line.contains(">>")) {
             errors.add(new ErrorMessage(lineNumber, "Malformed tag sequence on line " + lineNumber + ": contains '>>'"));
         }
     }
 
+    /**
+     * Matches start and end tags, checking for proper nesting, unclosed tags,
+     * and mismatched tag cases.
+     */
     private void matchTags() {
         Stack<TagInfo> openTags = new Stack<>();
 
@@ -114,16 +179,13 @@ public class XMLParser {
             if (tag.isStart) {
                 openTags.push(tag);
             } else {
-                // Look back for a matching start tag
                 boolean matched = false;
                 for (int i = openTags.size() - 1; i >= 0; i--) {
                     TagInfo candidate = openTags.get(i);
                     if (!candidate.matched && candidate.name.equals(tag.name)) {
-                        // Match found
                         candidate.matched = true;
                         tag.matched = true;
 
-                        // Any in-between tags are now unclosed
                         for (int j = openTags.size() - 1; j > i; j--) {
                             TagInfo orphan = openTags.get(j);
                             if (!orphan.matched) {
@@ -132,7 +194,6 @@ public class XMLParser {
                             }
                         }
 
-                        // Remove everything down to the match
                         while (openTags.size() > i) {
                             openTags.pop();
                         }
@@ -145,7 +206,6 @@ public class XMLParser {
                 if (!matched) {
                     errors.add(new ErrorMessage(tag.line, "Unmatched closing tag at line " + tag.line + ": " + tag.fullText));
 
-                    // Case mismatch suggestion
                     for (TagInfo open : allTags) {
                         if (open.isStart && !open.matched &&
                             open.name.equalsIgnoreCase(tag.name) &&
@@ -161,7 +221,6 @@ public class XMLParser {
             }
         }
 
-        // Remaining unmatched start tags
         for (TagInfo tag : openTags) {
             if (!tag.matched) {
                 errors.add(new ErrorMessage(tag.line, "Unclosed tag <" + tag.name + "> from line " + tag.line));
@@ -169,17 +228,26 @@ public class XMLParser {
         }
     }
 
+    /**
+     * Extracts a tag name from a full tag string.
+     *
+     * @param tag the full tag text
+     * @return the tag name, or {@code null} if extraction fails
+     */
     private String extractTagName(String tag) {
         tag = tag.replaceAll("[</>]", "").trim();
         if (tag.isEmpty()) return null;
         return tag.split("\\s+")[0];
     }
 
+    /**
+     * Prints all collected errors to the standard output.
+     * If no errors are found, a success message is printed.
+     */
     public void printErrors() {
         if (errors.isEmpty()) {
             System.out.println("XML parsed successfully. No errors found.");
         } else {
-            // Sort by line number
             errors.sort(Comparator.comparingInt(e -> e.line));
             for (ErrorMessage error : errors) {
                 System.out.println(error.message);

@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"implementations","l":"MyArrayList"},{"p":"implementations","l":"MyArrayList.MyArrayListIterator"}];updateSearchResults();

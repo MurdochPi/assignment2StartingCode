@@ -1,20 +1,47 @@
 package implementations;
 
 import utilities.ListADT;
-import java.util.NoSuchElementException;
 import utilities.Iterator;
+import java.util.NoSuchElementException;
 
+/**
+ * A custom implementation of the {@link ListADT} interface using a doubly linked list.
+ * 
+ * <p>This class maintains references to both the head and tail nodes for efficient
+ * insertions and deletions at both ends. It supports standard list operations including
+ * indexed access, insertion, removal, and iteration.
+ *
+ * <p>Null elements are not allowed and will result in {@link NullPointerException}.
+ *
+ * @param <E> the type of elements in this list
+ * 
+ * @version 1.0
+ * @since 2025
+ * 
+ * @see utilities.ListADT
+ * 
+ * @author Lochlan Piercey
+ * @author Murdoch Piercey
+ * @author Terril Moyo
+ */
 public class MyDLL<E> implements ListADT<E> {
-	private static final long serialVersionUID = 4677955515946159887L;
-	private MyDLLNode<E> head;
+
+    private static final long serialVersionUID = 4677955515946159887L;
+    private MyDLLNode<E> head;
     private MyDLLNode<E> tail;
     private int size;
 
+    /**
+     * Constructs an empty doubly linked list.
+     */
     public MyDLL() {
         head = tail = null;
         size = 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean add(int index, E toAdd) throws NullPointerException, IndexOutOfBoundsException {
         if (toAdd == null) throw new NullPointerException("Cannot add null element.");
@@ -49,9 +76,13 @@ public class MyDLL<E> implements ListADT<E> {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean add(E toAdd) throws NullPointerException {
         if (toAdd == null) throw new NullPointerException("Cannot add null element.");
+
         MyDLLNode<E> newNode = new MyDLLNode<>(toAdd);
 
         if (head == null) {
@@ -66,6 +97,9 @@ public class MyDLL<E> implements ListADT<E> {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public E remove(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= size) throw new IndexOutOfBoundsException("Index out of bounds.");
@@ -91,6 +125,9 @@ public class MyDLL<E> implements ListADT<E> {
         return current.getData();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public E get(int index) throws IndexOutOfBoundsException {
         if (index < 0 || index >= size) throw new IndexOutOfBoundsException("Index out of bounds.");
@@ -103,11 +140,17 @@ public class MyDLL<E> implements ListADT<E> {
         return current.getData();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int size() {
         return size;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Iterator<E> iterator() {
         return new Iterator<E>() {
@@ -128,12 +171,18 @@ public class MyDLL<E> implements ListADT<E> {
         };
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void clear() {
         head = tail = null;
         size = 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean addAll(ListADT<? extends E> toAdd) throws NullPointerException {
         if (toAdd == null) throw new NullPointerException("Cannot add null list.");
@@ -146,6 +195,9 @@ public class MyDLL<E> implements ListADT<E> {
         return true;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public E remove(E toRemove) throws NullPointerException {
         if (toRemove == null) throw new NullPointerException("Cannot remove null element.");
@@ -174,6 +226,9 @@ public class MyDLL<E> implements ListADT<E> {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public E set(int index, E toChange) throws NullPointerException, IndexOutOfBoundsException {
         if (toChange == null) throw new NullPointerException("Cannot set null element.");
@@ -189,11 +244,17 @@ public class MyDLL<E> implements ListADT<E> {
         return oldData;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isEmpty() {
         return size == 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean contains(E toFind) throws NullPointerException {
         if (toFind == null) throw new NullPointerException("Cannot search for null element.");
@@ -205,9 +266,13 @@ public class MyDLL<E> implements ListADT<E> {
             }
             current = current.getNext();
         }
+
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public E[] toArray(E[] toHold) throws NullPointerException {
@@ -231,6 +296,9 @@ public class MyDLL<E> implements ListADT<E> {
         return toHold;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object[] toArray() {
         Object[] array = new Object[size];
