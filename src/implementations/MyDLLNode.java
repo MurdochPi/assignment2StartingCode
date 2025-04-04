@@ -14,6 +14,11 @@ public class MyDLLNode<E> {
     public E getData() {
         return data;
     }
+    
+    public void setData(E data) {
+        this.data = data;
+    }
+
 
     public MyDLLNode<E> getNext() {
         return next;
